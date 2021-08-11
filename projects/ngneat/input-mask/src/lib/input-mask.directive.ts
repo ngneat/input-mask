@@ -13,7 +13,12 @@ import {
   Renderer2,
   Self,
 } from '@angular/core';
-import { ControlValueAccessor, NgControl, Validator } from '@angular/forms';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NgControl,
+  Validator,
+} from '@angular/forms';
 import Inputmask from 'inputmask';
 
 @Directive({ selector: '[inputMask]' })
@@ -26,6 +31,8 @@ export class InputMaskDirective<T = any>
    */
   @Input() inputMask: InputmaskOptions<T> = {};
   inputMaskPlugin: Inputmask.Instance | undefined;
+
+  private formInitialValue: T | undefined;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: string,
@@ -41,9 +48,13 @@ export class InputMaskDirective<T = any>
   @HostListener('input', ['$event.target.value'])
   onInput = (_: any) => {};
 
+  @HostListener('blur', ['$event.target.value'])
+  onBlur = (_: any) => {};
+
   ngOnInit() {
-    this.ngControl?.control?.setValidators([this.validate.bind(this)]);
-    this.ngControl?.control?.updateValueAndValidity();
+    this.formControl?.setValidators([this.validate.bind(this)]);
+    this.formControl?.updateValueAndValidity();
+    this.formInitialValue = this.formControl?.value;
   }
 
   ngOnDestroy(): void {
@@ -59,8 +70,9 @@ export class InputMaskDirective<T = any>
       this.inputMaskPlugin = new Inputmask(this.inputMaskOptions).mask(
         this.elementRef.nativeElement
       );
+
       setTimeout(() => {
-        this.ngControl?.control?.updateValueAndValidity();
+        this.formControl?.updateValueAndValidity();
       });
     }
   }
@@ -75,19 +87,45 @@ export class InputMaskDirective<T = any>
   }
 
   registerOnChange(fn: (_: T | null) => void): void {
-    const parser = this.inputMask.parser;
-    this.onInput = (value) => {
-      fn(parser ? parser(value) : value);
-    };
+    this.onChange = fn;
+    if (this.formControlHasUpdateStrategy('change')) {
+      const parser = this.inputMask.parser;
+      this.onInput = (value) => {
+        fn(parser ? parser(value) : value);
+      };
+    }
   }
 
-  registerOnTouched(fn: any): void {}
+  registerOnTouched(fn: () => void): void {
+    if (this.formControlHasUpdateStrategy('blur')) {
+      const parser = this.inputMask.parser;
+      this.onBlur = (value): void => {
+        const newValue = parser ? parser(value) : value;
+        this.onChange(newValue);
+        if (this.formInitialValue !== value) {
+          fn();
+        }
+      };
+    }
+  }
 
   validate(): { [key: string]: any } | null {
     return this.inputMaskPlugin && this.inputMaskPlugin.isValid()
       ? null
       : { inputMask: false };
   }
+
+  private get formControl(): AbstractControl | null {
+    return this.ngControl?.control;
+  }
+
+  private formControlHasUpdateStrategy(
+    updateStrategy: 'change' | 'blur' | 'submit'
+  ) {
+    return this.formControl?.updateOn === updateStrategy;
+  }
+
+  private onChange: (_: T | null) => void = (_: any) => {};
 }
 
 export const createMask = <T>(

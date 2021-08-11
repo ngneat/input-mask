@@ -25,5 +25,15 @@ Valid: {{ ipAddress.valid }} | Value: {{ ipAddress.value }} | Errors:
 {{ ipAddress.errors | json }}
 <p>--------------</p>
 <input [formControl]="dateFC" [inputMask]="dateInputMask" placeholder="Date" />
-Valid: {{ dateFC.valid }} | Value: {{ dateFC.value }} | Errors:
+Valid: {{ dateFC.valid }} | Dirty: {{ dateFC.dirty }}| Value:
+{{ dateFC.value }} | Errors:
 {{ dateFC.errors | json }}
+<p>-------------- update Value on blur</p>
+<input
+  placeholder="Date"
+  [formControl]="dateBlurFC"
+  [inputMask]="dateInputMask"
+/>
+Valid: {{ dateBlurFC.valid }} | Dirty: {{ dateBlurFC.dirty }} | Value:
+{{ dateBlurFC.value }} | Errors:
+{{ dateBlurFC.errors | json }}

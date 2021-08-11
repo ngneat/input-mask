@@ -9,6 +9,11 @@ import { InputMaskModule } from './input-mask.module';
     <input class="date" [inputMask]="dateMask" [formControl]="dateFC" />
     <input class="ip" [inputMask]="ipAddressMask" [formControl]="ipFC" />
     <input class="initDate" [inputMask]="dateMask" [formControl]="initDateFC" />
+    <input
+      class="dateOnBlur"
+      [inputMask]="dateMask"
+      [formControl]="dateBlurFC"
+    />
   `,
 })
 class TestComponent {
@@ -20,10 +25,15 @@ class TestComponent {
       const year = +values[2];
       const month = +values[1] - 1;
       const date = +values[0];
+      if (isNaN(date) && isNaN(month) && isNaN(year)) {
+        // + empty string returns 0
+        return null;
+      }
       return new Date(year, month, date);
     },
   });
   dateFC = new FormControl('');
+  dateBlurFC = new FormControl('', { updateOn: 'blur' });
   initDateFC = new FormControl('28/02/1992');
 
   ipAddressMask = createMask({ alias: 'ip' });
@@ -69,5 +79,19 @@ describe('InputMaskDirective', () => {
   it('should render with initial value', () => {
     const input = spectator.query('.initDate') as HTMLInputElement;
     expect(input.value).toEqual('28/02/1992');
+  });
+
+  it('should update the UI value as per mask with updateOn: \'blur\'', () => {
+    const input = spectator.query('.dateOnBlur') as HTMLInputElement;
+    spectator.typeInElement('28021992', '.dateOnBlur');
+    expect(input.value).toEqual('28/02/1992');
+    expect(spectator.component.dateBlurFC.value).toBeFalsy();
+    expect(spectator.component.dateBlurFC.dirty).toBeFalse();
+    expect(spectator.component.dateBlurFC.touched).toBeFalse();
+    spectator.blur('.dateOnBlur');
+    expect(input.value).toEqual('28/02/1992');
+    expect(spectator.component.dateBlurFC.value).toEqual(new Date(1992, 1, 28));
+    expect(spectator.component.dateBlurFC.dirty).toBeTrue();
+    expect(spectator.component.dateBlurFC.touched).toBeTrue();
   });
 });

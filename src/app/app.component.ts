@@ -10,7 +10,7 @@ import { createMask } from '@ngneat/input-mask';
 export class AppComponent {
   title: Date = new Date();
 
-  dateInputMask = createMask<Date>({
+  dateInputMask = createMask<Date | null>({
     alias: 'datetime',
     inputFormat: 'dd/mm/yyyy',
     parser: (value: string) => {
@@ -18,6 +18,10 @@ export class AppComponent {
       const year = +values[2];
       const month = +values[1] - 1;
       const date = +values[0];
+      if (isNaN(date) && isNaN(month) && isNaN(year)) {
+        // + empty string returns 0
+        return null;
+      }
       return new Date(year, month, date);
     },
   });
@@ -34,4 +38,5 @@ export class AppComponent {
   ipAddressMask = createMask({ alias: 'ip' });
   ipAddress = new FormControl('');
   dateFC = new FormControl('');
+  dateBlurFC = new FormControl('', { updateOn: 'blur' });
 }
