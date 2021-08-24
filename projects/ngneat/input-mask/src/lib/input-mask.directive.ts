@@ -41,7 +41,7 @@ export class InputMaskDirective<T = any>
   @HostListener('input', ['$event.target.value'])
   onInput = (_: any) => {};
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.ngControl?.control?.setValidators([this.validate.bind(this)]);
     this.ngControl?.control?.updateValueAndValidity();
   }
@@ -50,7 +50,7 @@ export class InputMaskDirective<T = any>
     this.inputMaskPlugin?.remove();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (isPlatformServer(this.platformId)) {
       return;
     }
@@ -84,7 +84,9 @@ export class InputMaskDirective<T = any>
   registerOnTouched(fn: any): void {}
 
   validate(): { [key: string]: any } | null {
-    return this.inputMaskPlugin && this.inputMaskPlugin.isValid()
+    const isEmptyValue = !this.ngControl?.control?.value?.length;
+    return isEmptyValue ||
+      (this.inputMaskPlugin && this.inputMaskPlugin.isValid())
       ? null
       : { inputMask: false };
   }
