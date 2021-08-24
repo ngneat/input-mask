@@ -11,7 +11,7 @@ import {
   Optional,
   PLATFORM_ID,
   Renderer2,
-  Self,
+  Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validator } from '@angular/forms';
 import Inputmask from 'inputmask';
@@ -39,9 +39,9 @@ export class InputMaskDirective<T = any>
   }
 
   @HostListener('input', ['$event.target.value'])
-  onInput = (_: any) => {};
+  onInput = (_: any) => {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.ngControl?.control?.setValidators([this.validate.bind(this)]);
     this.ngControl?.control?.updateValueAndValidity();
   }
@@ -50,7 +50,7 @@ export class InputMaskDirective<T = any>
     this.inputMaskPlugin?.remove();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (isPlatformServer(this.platformId)) {
       return;
     }
@@ -71,7 +71,9 @@ export class InputMaskDirective<T = any>
   }
 
   writeValue(value: string): void {
-    this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
+    if (value) {
+      this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
+    }
   }
 
   registerOnChange(fn: (_: T | null) => void): void {
