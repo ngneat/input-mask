@@ -11,7 +11,7 @@ import {
   Optional,
   PLATFORM_ID,
   Renderer2,
-  Self
+  Self,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validator } from '@angular/forms';
 import Inputmask from 'inputmask';
@@ -39,7 +39,7 @@ export class InputMaskDirective<T = any>
   }
 
   @HostListener('input', ['$event.target.value'])
-  onInput = (_: any) => {}
+  onInput = (_: any) => {};
 
   ngOnInit(): void {
     this.ngControl?.control?.setValidators([this.validate.bind(this)]);
@@ -73,6 +73,8 @@ export class InputMaskDirective<T = any>
   writeValue(value: string): void {
     if (value) {
       this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
+    } else {
+      return;
     }
   }
 
