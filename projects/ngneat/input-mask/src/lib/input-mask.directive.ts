@@ -71,11 +71,11 @@ export class InputMaskDirective<T = any>
   }
 
   writeValue(value: string): void {
-    if (value) {
-      this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
-    } else {
-      return;
-    }
+    this.renderer.setProperty(
+      this.elementRef.nativeElement,
+      'value',
+      value ?? ''
+    );
   }
 
   registerOnChange(fn: (_: T | null) => void): void {
