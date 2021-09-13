@@ -56,6 +56,24 @@ import { InputMaskModule } from '@ngneat/input-mask';
 class AppModule {}
 ```
 
+### Ionic
+
+```bash
+npm install @ngneat/input-mask-ionic inputmask@5
+npm install -D @types/inputmask@5
+```
+
+For usage with ionic, import `InputMaskIonicModule`:
+
+```typescript
+import { InputMaskIonicModule } from '@ngneat/input-mask-ionic';
+
+@NgModule({
+  imports: [InputMaskIonicModule],
+})
+class AppModule {}
+```
+
 ## Usage examples
 
 ### 1. Date

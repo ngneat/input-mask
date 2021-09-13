@@ -29,13 +29,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -92,23 +87,15 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         },
         "e2e": {
@@ -161,6 +148,43 @@
             "lintFilePatterns": [
               "projects/ngneat/input-mask/**/*.ts",
               "projects/ngneat/input-mask/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "@ngneat/input-mask-ionic": {
+      "projectType": "library",
+      "root": "projects/ngneat/input-mask-ionic",
+      "sourceRoot": "projects/ngneat/input-mask-ionic/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ngneat/input-mask-ionic/tsconfig.lib.json",
+            "project": "projects/ngneat/input-mask-ionic/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngneat/input-mask-ionic/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngneat/input-mask-ionic/src/test.ts",
+            "tsConfig": "projects/ngneat/input-mask-ionic/tsconfig.spec.json",
+            "karmaConfig": "projects/ngneat/input-mask-ionic/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ngneat/input-mask-ionic/**/*.ts",
+              "projects/ngneat/input-mask-ionic/**/*.html"
             ]
           }
         }

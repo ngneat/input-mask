@@ -1,0 +1,39 @@
+{
+  "name": "@ngneat/input-mask-ionic",
+  "version": "2.0.0",
+  "description": "@ngneat/input-mask-ionic is an angular library that creates an input mask for ionic.",
+  "peerDependencies": {
+    "@angular/common": ">= 11.2.7 < 13",
+    "@angular/core": ">= 11.2.7 < 13",
+    "inputmask": "^5.0.5",
+    "@ionic/angular": "^5.7.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
+  "keywords": [
+    "angular",
+    "angular 2",
+    "input-mask",
+    "ionic"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/ngneat/input-mask/issue"
+  },
+  "homepage": "https://github.com/ngneat/input-mask#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ngneat/input-mask"
+  },
+  "schematics": "./schematics/collection.json",
+  "scripts": {
+    "build": "tsc -p tsconfig.schematics.json",
+    "copy:schemas": "cpx schematics/ng-add ../../../dist/ngneat/input-mask-ionic/",
+    "copy:collection": "cpx schematics/collection.json ../../../dist/ngneat/input-mask-ionic/schematics/",
+    "postbuild": "npm run copy:schemas && npm run copy:collection"
+  }
+}
