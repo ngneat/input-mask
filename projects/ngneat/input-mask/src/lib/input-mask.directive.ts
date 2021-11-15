@@ -79,8 +79,7 @@ export class InputMaskDirective<T = any>
     if (
       isPlatformServer(this.platformId) ||
       !this.nativeInputElement ||
-      !Object.keys(this.inputMask).length ||
-      this.ngControl?.disabled === true
+      !Object.keys(this.inputMask).length
     ) {
       return;
     }
