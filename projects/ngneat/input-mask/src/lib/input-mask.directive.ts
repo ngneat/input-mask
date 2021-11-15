@@ -28,7 +28,8 @@ import { InputmaskOptions } from './types';
   selector: '[inputMask]',
 })
 export class InputMaskDirective<T = any>
-  implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+  implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator
+{
   /**
    *Helps you to create input-mask based on https://github.com/RobinHerbots/Inputmask
    *Supports form-validation out-of-the box.
@@ -78,7 +79,8 @@ export class InputMaskDirective<T = any>
     if (
       isPlatformServer(this.platformId) ||
       !this.nativeInputElement ||
-      !Object.keys(this.inputMask).length
+      !Object.keys(this.inputMask).length ||
+      this.ngControl?.disabled === true
     ) {
       return;
     }
@@ -119,6 +121,12 @@ export class InputMaskDirective<T = any>
     this.onTouched = fn;
   }
 
+  setDisabledState(isDisabled: boolean): void {
+    if (this.nativeInputElement) {
+      this.nativeInputElement.disabled = isDisabled;
+    }
+  }
+
   validate(control: AbstractControl): { [key: string]: any } | null {
     return !control.value ||
       !this.inputMaskPlugin ||
@@ -140,9 +148,10 @@ export class InputMaskDirective<T = any>
         this.mutationObserver = new MutationObserver((mutationsList) => {
           for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-              const nativeInputElement = this.elementRef.nativeElement.querySelector(
-                this.defaultInputMaskConfig.inputSelector
-              );
+              const nativeInputElement =
+                this.elementRef.nativeElement.querySelector(
+                  this.defaultInputMaskConfig.inputSelector
+                );
               if (nativeInputElement) {
                 this.nativeInputElement = nativeInputElement;
                 this.mutationObserver?.disconnect();
