@@ -122,7 +122,11 @@ export class InputMaskDirective<T = any>
 
   setDisabledState(isDisabled: boolean): void {
     if (this.nativeInputElement) {
-      this.nativeInputElement.disabled = isDisabled;
+      this.renderer.setProperty(
+        this.nativeInputElement,
+        'disabled',
+        isDisabled
+      );
     }
   }
 
